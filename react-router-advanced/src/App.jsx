@@ -1,35 +1,95 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Link, useParams, Navigate } from 'react-router-dom';
+
+// Dummy authentication check
+const isAuthenticated = false;
+
+// ProtectedRoute component
+const ProtectedRoute = ({ children }) => {
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
+  return children;
+};
+
+// Home component
+const Home = () => {
+  return <h2>Home Page</h2>;
+};
+
+// Profile component with nested routes
+const Profile = () => {
+  return (
+    <div>
+      <h2>Profile</h2>
+      <nav>
+        <ul>
+          <li><Link to="details">Profile Details</Link></li>
+          <li><Link to="settings">Profile Settings</Link></li>
+        </ul>
+      </nav>
+    </div>
+  );
+};
+
+// Profile Details component
+const ProfileDetails = () => {
+  return <h3>Profile Details</h3>;
+};
+
+// Profile Settings component
+const ProfileSettings = () => {
+  return <h3>Profile Settings</h3>;
+};
+
+// Dynamic Post component
+const Post = () => {
+  const { id } = useParams();
+  return <h3>Post {id}</h3>;
+};
+
+// Login page (for testing protected route)
+const Login = () => {
+  return <h2>Please log in</h2>;
+};
+
+// Not Found page
+const NotFound = () => {
+  return <h2>404 Not Found</h2>;
+};
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
+    <Router>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <nav>
+          <ul>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/profile">Profile</Link></li>
+            <li><Link to="/post/1">Post 1</Link></li>
+            <li><Link to="/post/2">Post 2</Link></li>
+          </ul>
+        </nav>
+
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="login" element={<Login />} />
+
+          {/* Protected Route for Profile */}
+          <Route path="profile" element={<ProtectedRoute><Profile /></ProtectedRoute>}>
+            <Route path="details" element={<ProfileDetails />} />
+            <Route path="settings" element={<ProfileSettings />} />
+          </Route>
+
+          {/* Dynamic Route for Posts */}
+          <Route path="post/:id" element={<Post />} />
+
+          {/* Catch-all for Not Found */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </Router>
+  );
 }
 
-export default App
+export default App;

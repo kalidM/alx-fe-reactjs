@@ -30,7 +30,7 @@ const RegistrationForm = () => {
                 <input
                     type="text"
                     name="username"
-                    value={formData.username}
+                    value={formData.username} // Add this line
                     onChange={handleChange}
                 />
             </div>
@@ -39,7 +39,7 @@ const RegistrationForm = () => {
                 <input
                     type="email"
                     name="email"
-                    value={formData.email}
+                    value={formData.email} // Add this line
                     onChange={handleChange}
                 />
             </div>
@@ -48,7 +48,7 @@ const RegistrationForm = () => {
                 <input
                     type="password"
                     name="password"
-                    value={formData.password}
+                    value={formData.password} // Add this line
                     onChange={handleChange}
                 />
             </div>

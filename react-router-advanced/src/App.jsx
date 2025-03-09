@@ -17,6 +17,17 @@ const Home = () => {
   return <h2>Home Page</h2>;
 };
 
+// BlogPost component for dynamic routing
+const BlogPost = () => {
+  const { id } = useParams(); // Extract the post ID from the URL
+  return <h3>Blog Post {id}</h3>;
+};
+
+// Login page (for testing protected route)
+const Login = () => {
+  return <h2>Please log in</h2>;
+};
+
 // Profile component with nested routes
 const Profile = () => {
   return (
@@ -42,17 +53,6 @@ const ProfileSettings = () => {
   return <h3>Profile Settings</h3>;
 };
 
-// Dynamic Post component
-const Post = () => {
-  const { id } = useParams();
-  return <h3>Post {id}</h3>;
-};
-
-// Login page (for testing protected route)
-const Login = () => {
-  return <h2>Please log in</h2>;
-};
-
 // Not Found page
 const NotFound = () => {
   return <h2>404 Not Found</h2>;
@@ -66,8 +66,8 @@ function App() {
           <ul>
             <li><Link to="/">Home</Link></li>
             <li><Link to="/profile">Profile</Link></li>
-            <li><Link to="/post/1">Post 1</Link></li>
-            <li><Link to="/post/2">Post 2</Link></li>
+            <li><Link to="/blog/1">Blog Post 1</Link></li>
+            <li><Link to="/blog/2">Blog Post 2</Link></li>
           </ul>
         </nav>
 
@@ -81,8 +81,8 @@ function App() {
             <Route path="settings" element={<ProfileSettings />} />
           </Route>
 
-          {/* Dynamic Route for Posts */}
-          <Route path="post/:id" element={<Post />} />
+          {/* Dynamic Route for Blog Post */}
+          <Route path="blog/:id" element={<BlogPost />} />
 
           {/* Catch-all for Not Found */}
           <Route path="*" element={<NotFound />} />

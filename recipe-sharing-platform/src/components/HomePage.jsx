@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import { Link } from "react-router-dom";
 
+// Add this button to the HomePage component
+<div className="text-center mt-8">
+  <Link
+    to="/add-recipe"
+    className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors duration-300"
+  >
+    Add a New Recipe
+  </Link>
+</div>
 const HomePage = () => {
   const [recipes, setRecipes] = useState([]);
 

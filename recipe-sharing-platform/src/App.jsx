@@ -5,5 +5,12 @@ function App() {
       </div>
   );
 }
+function App() {
+  return (
+    <div className="text-center text-blue-500 text-4xl font-bold mt-10">
+      Welcome to the Recipe Sharing Platform!
+    </div>
+  );
+}
 
 export default App;

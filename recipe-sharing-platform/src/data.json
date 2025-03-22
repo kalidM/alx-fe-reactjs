@@ -23,4 +23,34 @@
       "summary": "Crispy taco shells filled with seasoned beef, lettuce, cheese, and salsa.",
       "image": "https://via.placeholder.com/150"
     }
+    [
+        {
+          "id": 1,
+          "title": "Spaghetti Carbonara",
+          "summary": "A classic Italian pasta dish with eggs, cheese, bacon, and black pepper.",
+          "image": "https://via.placeholder.com/150",
+          "ingredients": ["Spaghetti", "Eggs", "Parmesan Cheese", "Bacon", "Black Pepper"],
+          "instructions": [
+            "Cook the spaghetti according to package instructions.",
+            "Fry the bacon until crispy.",
+            "Whisk eggs and Parmesan cheese in a bowl.",
+            "Combine cooked spaghetti with bacon and egg mixture.",
+            "Serve immediately with black pepper."
+          ]
+        },
+        {
+          "id": 2,
+          "title": "Chicken Tikka Masala",
+          "summary": "Chunks of grilled chicken (tikka) cooked in a smooth buttery & creamy tomato based gravy.",
+          "image": "https://via.placeholder.com/150",
+          "ingredients": ["Chicken", "Yogurt", "Tomatoes", "Cream", "Spices"],
+          "instructions": [
+            "Marinate chicken in yogurt and spices.",
+            "Grill the chicken until cooked.",
+            "Prepare the tomato-based gravy.",
+            "Combine grilled chicken with the gravy.",
+            "Simmer for 10 minutes and serve with rice or naan."
+          ]
+        }
+      ]
   ]

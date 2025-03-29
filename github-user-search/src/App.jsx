@@ -2,6 +2,16 @@ import { useState } from 'react';
 import SearchBar from './components/SearchBar';
 import UserProfile from './components/UserProfile';
 import { fetchUserData } from './services/githubService';
+import Search from './components/Search';
+
+function App() {
+  return (
+    <div className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-6">GitHub User Search</h1>
+      <Search />
+    </div>
+  );
+}
 
 function App() {
   const [user, setUser] = useState(null);

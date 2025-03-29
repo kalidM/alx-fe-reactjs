@@ -1,25 +1,12 @@
 import { useState } from 'react';
 import { searchUsers } from '../services/githubService';
-import { searchUsers } from '../services/githubService';
-
-// Usage example inside your component:
-const handleSearch = async (searchParams) => {
-  try {
-    const results = await searchUsers({
-      username: searchParams.query,
-      location: searchParams.location,
-      minRepos: searchParams.minRepos
-    });
-    setUsers(results);
-  } catch (error) {
-    setError(error.message);
-  }
-};
 
 const Search = () => {
-  const [query, setQuery] = useState('');
-  const [location, setLocation] = useState('');
-  const [minRepos, setMinRepos] = useState('');
+  const [searchParams, setSearchParams] = useState({
+    username: '',
+    location: '',
+    minRepos: ''
+  });
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -30,14 +17,19 @@ const Search = () => {
     setError(null);
     
     try {
-      const users = await searchUsers({ query, location, minRepos });
+      const { users } = await searchUsers(searchParams);
       setResults(users);
     } catch (err) {
-      setError('Failed to fetch users. Please try again.');
+      setError(err.message);
       setResults([]);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setSearchParams(prev => ({ ...prev, [name]: value }));
   };
 
   return (
@@ -52,8 +44,9 @@ const Search = () => {
             </label>
             <input
               type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              name="username"
+              value={searchParams.username}
+              onChange={handleInputChange}
               placeholder="e.g. octocat"
               className="w-full p-2 border rounded"
             />
@@ -65,8 +58,9 @@ const Search = () => {
             </label>
             <input
               type="text"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
+              name="location"
+              value={searchParams.location}
+              onChange={handleInputChange}
               placeholder="e.g. San Francisco"
               className="w-full p-2 border rounded"
             />
@@ -78,8 +72,9 @@ const Search = () => {
             </label>
             <input
               type="number"
-              value={minRepos}
-              onChange={(e) => setMinRepos(e.target.value)}
+              name="minRepos"
+              value={searchParams.minRepos}
+              onChange={handleInputChange}
               placeholder="e.g. 10"
               min="0"
               className="w-full p-2 border rounded"
@@ -118,13 +113,10 @@ const Search = () => {
                   />
                   <div>
                     <h3 className="font-bold text-lg">{user.login}</h3>
+                    {user.name && <p className="text-gray-600">{user.name}</p>}
                     {user.location && (
-                      <p className="text-gray-600 flex items-center gap-1 mt-1">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        {user.location}
+                      <p className="text-gray-600 mt-1">
+                        📍 {user.location}
                       </p>
                     )}
                     <p className="text-gray-600 mt-1">

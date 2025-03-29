@@ -2,6 +2,13 @@ import { useState } from 'react';
 import SearchBar from './components/SearchBar';
 import UserProfile from './components/UserProfile';
 import { fetchUserData } from './services/githubService';
+function App() {
+  return (
+    <h1 className="text-3xl font-bold text-blue-500">
+      GitHub User Search
+    </h1>
+  )
+}
 import Search from './components/Search';
 
 function App() {

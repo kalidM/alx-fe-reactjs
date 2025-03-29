@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import { fetchUserData } from '../services/githubService';
 
 const Search = () => {
   const [username, setUsername] = useState('');
@@ -9,14 +9,21 @@ const Search = () => {
 
   const handleSearch = async (e) => {
     e.preventDefault();
+    if (!username.trim()) return;
+    
     setLoading(true);
     setError(null);
     
     try {
-      const response = await axios.get(`https://api.github.com/users/${username}`);
-      setUserData(response.data);
+      const { data, error: apiError } = await fetchUserData(username);
+      if (apiError) {
+        setError(apiError);
+        setUserData(null);
+      } else {
+        setUserData(data);
+      }
     } catch (err) {
-      setError('Looks like we cant find the user');
+      setError('Failed to fetch user data');
       setUserData(null);
     } finally {
       setLoading(false);
@@ -38,8 +45,9 @@ const Search = () => {
           <button 
             type="submit" 
             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            disabled={loading}
           >
-            Search
+            {loading ? 'Searching...' : 'Search'}
           </button>
         </div>
       </form>

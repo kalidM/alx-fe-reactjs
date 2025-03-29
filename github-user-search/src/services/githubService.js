@@ -1,59 +1,67 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://api.github.com';
+const GITHUB_API_URL = 'https://api.github.com';
 
-export const searchUsers = async (searchParams) => {
+export const searchUsers = async (searchTerm, filters = {}) => {
   try {
-    // Construct query string from search parameters
-    let query = searchParams.username || '';
-    if (searchParams.location) query += ` location:${searchParams.location}`;
-    if (searchParams.minRepos) query += ` repos:>${searchParams.minRepos}`;
-    
-    // Make request to GitHub Search API
-    const response = await axios.get(`${BASE_URL}/search/users`, {
-      params: {
-        q: query,
-        per_page: 10 // Limit to 10 results by default
-      },
-      headers: {
-        'Accept': 'application/vnd.github.v3+json'
+    // Construct the search query
+    let query = `${searchTerm}`;
+    if (filters.location) query += `+location:${filters.location}`;
+    if (filters.minRepos) query += `+repos:>${filters.minRepos}`;
+    if (filters.language) query += `+language:${filters.language}`;
+
+    // Make the API request to GitHub's search endpoint
+    const response = await axios.get(
+      `${GITHUB_API_URL}/search/users?q=${encodeURIComponent(query)}`, 
+      {
+        headers: {
+          'Accept': 'application/vnd.github.v3+json'
+        },
+        params: {
+          per_page: filters.perPage || 10,
+          page: filters.page || 1
+        }
       }
-    });
+    );
 
     // Get detailed information for each user
     const usersWithDetails = await Promise.all(
       response.data.items.map(async (user) => {
-        const userResponse = await axios.get(user.url);
+        const userDetails = await axios.get(`${GITHUB_API_URL}/users/${user.login}`);
         return {
-          id: user.id,
-          login: user.login,
-          avatar_url: user.avatar_url,
-          html_url: user.html_url,
-          ...userResponse.data
+          ...user,
+          ...userDetails.data
         };
       })
     );
 
-    return usersWithDetails;
+    return {
+      users: usersWithDetails,
+      totalCount: response.data.total_count
+    };
   } catch (error) {
     console.error('GitHub API error:', error);
     throw new Error(error.response?.data?.message || 'Failed to search users');
   }
 };
 
-export const fetchUserData = async (username) => {
+export const fetchUserRepos = async (username) => {
   try {
-    const response = await axios.get(`${BASE_URL}/users/${username}`);
-    return {
-      data: response.data,
-      error: null,
-    };
+    const response = await axios.get(
+      `${GITHUB_API_URL}/users/${username}/repos`,
+      {
+        headers: {
+          'Accept': 'application/vnd.github.v3+json'
+        },
+        params: {
+          sort: 'updated',
+          per_page: 5
+        }
+      }
+    );
+    return response.data;
   } catch (error) {
-    return {
-      data: null,
-      error: error.response?.status === 404 
-        ? 'User not found' 
-        : 'Error fetching user data',
-    };
+    console.error('GitHub API error:', error);
+    throw new Error('Failed to fetch user repositories');
   }
 };

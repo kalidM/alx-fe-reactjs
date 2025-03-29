@@ -1,21 +1,33 @@
 import { useState } from 'react';
-import { searchUsers } from './services/githubService';
-import UserList from './components/UserList';
 import SearchBar from './components/SearchBar';
+import UserProfile from './components/UserProfile';
+import { fetchUserData } from './services/githubService';
 
 function App() {
-  const [users, setUsers] = useState([]);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleSearch = async (query) => {
-    const results = await searchUsers(query);
-    setUsers(results);
+  const handleSearch = async (username) => {
+    setLoading(true);
+    setError(null);
+    
+    const { data, error } = await fetchUserData(username);
+    
+    setLoading(false);
+    if (error) {
+      setError(error);
+      setUser(null);
+    } else {
+      setUser(data);
+    }
   };
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">GitHub User Search</h1>
+      <h1 className="text-3xl font-bold mb-6 text-center">GitHub User Search</h1>
       <SearchBar onSearch={handleSearch} />
-      <UserList users={users} />
+      <UserProfile user={user} loading={loading} error={error} />
     </div>
   );
 }

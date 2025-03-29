@@ -1,5 +1,20 @@
 import { useState } from 'react';
 import { searchUsers } from '../services/githubService';
+import { searchUsers } from '../services/githubService';
+
+// Usage example inside your component:
+const handleSearch = async (searchParams) => {
+  try {
+    const results = await searchUsers({
+      username: searchParams.query,
+      location: searchParams.location,
+      minRepos: searchParams.minRepos
+    });
+    setUsers(results);
+  } catch (error) {
+    setError(error.message);
+  }
+};
 
 const Search = () => {
   const [query, setQuery] = useState('');
